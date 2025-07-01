@@ -1,11 +1,19 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/no-unknown-property */
+/* eslint-disable no-unused-vars */
+// eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from "react";
 import "./ProductList.css";
 import CartItem from "./CartItem";
 import { addItem } from "./CartSlice";
+import { useDispatch, useSelector } from "react-redux";
 function ProductList({ onHomeClick }) {
   const [showCart, setShowCart] = useState(false);
   const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
   const [addedToCart, setAddedToCart] = useState([]); // State to keep track of added items
+
+  const dispatch = useDispatch();
+  const CartItems = useSelector((state) => state.cart.items);
 
   const plantsArray = [
     {
@@ -270,6 +278,11 @@ function ProductList({ onHomeClick }) {
     textDecoration: "none",
   };
 
+  const calculateTotalQuantity = () => {
+    return CartItems
+      ? CartItems.reduce((total, item) => total + item.quantity, 0)
+      : 0;
+  };
   const handleHomeClick = (e) => {
     e.preventDefault();
     onHomeClick();
@@ -291,8 +304,7 @@ function ProductList({ onHomeClick }) {
   };
 
   const handleAddToCart = (product) => {
-    dispatchEvent(addItem(product));
-
+    dispatch(addItem(product));
     setAddedToCart((prevState) => ({
       ...prevState,
       [product.name]: true,
@@ -360,14 +372,12 @@ function ProductList({ onHomeClick }) {
               index // Loop through each category in plantsArray
             ) => (
               <div key={index}>
-                {" "}
                 {/* Unique key for each category div */}
                 <h1>
                   <div>{category.category}</div>{" "}
                   {/* Display the category name */}
                 </h1>
                 <div className="product-list">
-                  {" "}
                   {/* Container for the list of plant cards */}
                   {category.plants.map(
                     (
@@ -375,21 +385,20 @@ function ProductList({ onHomeClick }) {
                       plantIndex // Loop through each plant in the current category
                     ) => (
                       <div className="product-card" key={plantIndex}>
-                        {" "}
                         {/* Unique key for each plant card */}
                         <img
                           className="product-image"
                           src={plant.image} // Display the plant image
                           alt={plant.name} // Alt text for accessibility
                         />
-                        <div className="product-title">{plant.name}</div>{" "}
+                        <div className="product-title">{plant.name}</div>
                         {/* Display plant name */}
                         {/* Display other plant details like description and cost */}
                         <div className="product-description">
                           {plant.description}
-                        </div>{" "}
+                        </div>
                         {/* Display plant description */}
-                        <div className="product-cost">${plant.cost}</div>{" "}
+                        <div className="product-cost">${plant.cost}</div>
                         {/* Display plant cost */}
                         <button
                           className="product-button"
