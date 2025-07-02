@@ -13,7 +13,12 @@ function ProductList({ onHomeClick }) {
   const [addedToCart, setAddedToCart] = useState([]); // State to keep track of added items
 
   const dispatch = useDispatch();
-  const CartItems = useSelector((state) => state.cart.items);
+  const cartItems = useSelector((state) => state.cart.items);
+  useEffect(() => {}, []);
+
+  const alreadyInCart = (itemName) => {
+    return cartItems.some((item) => item.name === itemName);
+  };
 
   const plantsArray = [
     {
@@ -279,8 +284,8 @@ function ProductList({ onHomeClick }) {
   };
 
   const calculateTotalQuantity = () => {
-    return CartItems
-      ? CartItems.reduce((total, item) => total + item.quantity, 0)
+    return cartItems
+      ? cartItems.reduce((total, item) => total + item.quantity, 0)
       : 0;
   };
 
@@ -312,6 +317,10 @@ function ProductList({ onHomeClick }) {
     }));
   };
 
+  const totalItems = () => {
+    return cartItems.reduce((total, item) => total + item.quantity, 0);
+  };
+
   return (
     <div>
       <div className="navbar" style={styleObj}>
@@ -340,6 +349,16 @@ function ProductList({ onHomeClick }) {
             {" "}
             <a href="#" onClick={(e) => handleCartClick(e)} style={styleA}>
               <h1 className="cart">
+                <label
+                  style={{
+                    zIndex: 1,
+                    position: "fixed",
+                    fontSize: "1.5rem",
+                    cursor: "pointer",
+                  }}
+                >
+                  {totalItems()}
+                </label>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 256 256"
@@ -402,6 +421,12 @@ function ProductList({ onHomeClick }) {
                         <div className="product-cost">${plant.cost}</div>
                         {/* Display plant cost */}
                         <button
+                          style={{
+                            backgroundColor: alreadyInCart(plant.name)
+                              ? "gray"
+                              : "#615EFC",
+                          }}
+                          disabled={alreadyInCart(plant.name) ? true : false}
                           className="product-button"
                           onClick={() => handleAddToCart(plant)} // Handle adding plant to cart
                         >
