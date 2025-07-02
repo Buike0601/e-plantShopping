@@ -394,7 +394,17 @@ function ProductList({ onHomeClick }) {
               <div key={index}>
                 {/* Unique key for each category div */}
                 <h1>
-                  <div>{category.category}</div>{" "}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      rowGap: "1vh",
+                    }}
+                  >
+                    {category.category}
+                  </div>{" "}
                   {/* Display the category name */}
                 </h1>
                 <div className="product-list">
@@ -418,7 +428,7 @@ function ProductList({ onHomeClick }) {
                           {plant.description}
                         </div>
                         {/* Display plant description */}
-                        <div className="product-cost">${plant.cost}</div>
+                        <div className="product-cost">{plant.cost}</div>
                         {/* Display plant cost */}
                         <button
                           style={{
